@@ -4,9 +4,9 @@ import SidebarElement from "./SidebarElement";
 const Sidebar = () => {
     return (
         <div className="sidebar">
-            <SidebarElement title={"Home"} />
-            <SidebarElement title={"About"} />
-            <SidebarElement title={"Contact us"} />
+            <SidebarElement title={"Home"} href={"/"} />
+            <SidebarElement title={"About"} href={"/about"} />
+            <SidebarElement title={"Contact us"} href={"/contact"} />
         </div>
     );
 };

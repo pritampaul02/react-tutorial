@@ -1,9 +1,12 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
-const SidebarElement = ({ title }) => {
+const SidebarElement = ({ title, href }) => {
     return (
         <div style={{ padding: "2rem" }}>
-            <h3>{title}</h3>
+            <Link className="link" to={href}>
+                {title}
+            </Link>
         </div>
     );
 };
