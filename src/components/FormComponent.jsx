@@ -1,27 +1,51 @@
 import React, { useState } from "react";
 import { PiPencilLine } from "react-icons/pi";
 import { RxCross2 } from "react-icons/rx";
+import useTodoStore from "../store/useTodoStore";
+import { FiLoader } from "react-icons/fi";
 
 const FormComponent = () => {
-    const [title, setTitle] = useState("");
-    const [todos, setTodos] = useState([]);
+    const { postTodo, isLoading } = useTodoStore();
+
+    const [todoForm, setTodoForm] = useState({
+        title: "",
+        description: "",
+        isCompleted: false,
+    });
+
+    const handleChange = (e) => {
+        console.log(todoForm);
+        setTodoForm({
+            ...todoForm,
+            [e.target.name]: e.target.value,
+        });
+    };
 
     function resetTitle(e) {
         e.preventDefault();
-        setTitle("");
+        setTodoForm({ ...todoForm, title: "" });
     }
 
     function submitForm(e) {
         e.preventDefault();
-        const id = Date.now();
-        const newTodo = {
-            id,
-            title,
-        };
-        const updatedTodos = [...todos, newTodo];
-        setTodos(updatedTodos);
-        localStorage.setItem("todos", JSON.stringify(updatedTodos));
-        setTitle("");
+        console.log(todoForm);
+
+        postTodo(todoForm);
+        // const id = Date.now();
+        // const newTodo = {
+        //     id,
+        //     title: todoForm.title,
+        //     description: todoForm.description,
+        //     isCompleted: todoForm.isCompleted,
+        // };
+        // const updatedTodos = [...todos, newTodo];
+        // setTodos(updatedTodos);
+        // localStorage.setItem("todos", JSON.stringify(updatedTodos));
+        setTodoForm({
+            title: "",
+            description: "",
+            isCompleted: false,
+        });
     }
 
     return (
@@ -45,16 +69,49 @@ const FormComponent = () => {
                         placeholder="Add your task"
                         required
                         className="w-full px-2 py-2 bg-transparent outline-none"
-                        onChange={(e) => setTitle(e.target.value)}
-                        value={title}
+                        onChange={handleChange}
+                        value={todoForm.title}
                     />
                     <button onClick={resetTitle}>
                         <RxCross2 className="text-2xl" />
                     </button>
                 </div>
+                <label
+                    htmlFor="description"
+                    className="text-lg font-medium text-black"
+                >
+                    Description :
+                </label>
+                <div className="w-full flex items-center rounded-md border border-slate-900 px-2 gap-2">
+                    <PiPencilLine className="text-2xl" />
+                    <textarea
+                        id="description"
+                        placeholder="Description"
+                        name="description"
+                        rows={4}
+                        className="w-full px-2 py-2 bg-transparent outline-none resize-none"
+                        onChange={handleChange}
+                        value={todoForm.description}
+                    />
+                    <button onClick={resetTitle}>
+                        <RxCross2 className="text-2xl" />
+                    </button>
+                </div>
+                <div>
+                    <input
+                        type="checkbox"
+                        name="isCompleted"
+                        id="isCompleted"
+                        onChange={(e) => {
+                            setTodoForm({ ...todoForm, isCompleted: true });
+                        }}
+                        value={todoForm.isCompleted}
+                    />
+                    <span>Completed</span>
+                </div>
             </div>
             <button className="w-full bg-slate-950 text-white p-3 rounded-md">
-                Add Todo
+                {isLoading ? <FiLoader /> : "Add Todo"}
             </button>
         </form>
     );
